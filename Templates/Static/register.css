@@ -1,0 +1,52 @@
+nav{
+    background-color: navy;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+form{
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+footer{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: white;
+    background-color: navy;
+    padding: 15px;
+}
+
+nav a{
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+form label{
+    margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="phone"]{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    
+}
+
+button{
+    border-radius: 5px;
+    max-width: 150px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
