@@ -21,12 +21,13 @@ footer{
 }
 
 image{
-    display: block;
+    display: flex;
     margin: 20px auto;
     max-width: 100%;
     height: auto;
     size: cover;
     object-fit: cover;
+    
 }
 
 body{

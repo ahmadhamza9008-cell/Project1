@@ -41,6 +41,7 @@ form input[type="phone"]{
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    backface-visibility: hidden;
 }
 
 button{

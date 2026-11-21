@@ -2,26 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Comfort - Houses</title>
-    <link rel="stylesheet" href="Static/houses.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='houses.css') }}">
 </head>
 <body>
-    
     <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="houses.html">Houses</a>        
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('houses') }}">Houses</a>
     </nav>
 
     <h1>Explore houses in the location you want within Jos city</h1>
-    
 
-     <footer>
-        &copy Studenst Comfort - 2025 All Right  Researved.
+    <div class="houses">
+        {% for house in houses %}
+        <div class="houses-card">
+            <img src="{{ url_for('static', filename=house['image_url']) }}" alt="{{ house['name'] }}">
+            <h4>{{ house['name'] }}</h4>
+            <p>Location: {{ house['address'] }}</p>
+            <p>Price: N{{ "{:,.0f}".format(house['price']) }} per year</p>
+            <p>{{ house['description'] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer>
+        &copy; Student Comfort - 2025 All Rights Reserved.
     </footer>
-</body>
 </body>
 </html>

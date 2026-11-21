@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="Static/about.css">
+    <title>Student Comfort - About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
 </head>
 <body>
-    
     <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="houses.html">Houses</a>        
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('houses') }}">Houses</a>
     </nav>
 
     <h1>About Student Comfort</h1>
-    <p>Student Comfort was found in 2026 at Havard Hub Jos by Student Industrial Work Scheme (SIWES) from University of Jos, Sa'adu Zungur University Bauchi, Prime University Abuja and Federal College oorestry Jos.</p>
+    <p>Student Comfort was founded in 2026 at Harvard Hub, Jos, by the Student Industrial Work Scheme (SIWES) from various universities and institutions across Nigeria.</p>
 
     <footer>
-        &copy Studenst Comfort - 2025 All Right  Researved.
+        &copy; Student Comfort - 2025 All Rights Reserved.
     </footer>
 </body>
 </html>

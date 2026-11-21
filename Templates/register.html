@@ -3,39 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="Static/register.css">
+    <title>Student Comfort - Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
 </head>
-<body> 
-
-     <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="houses.html">Houses</a>        
+<body>
+    <nav>
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('houses') }}">Houses</a>
     </nav>
 
-    <form action="">
-        <label for="name">Full Name</label><br>
-        <input type="text" name="fullname" placeholder="Full Name" required><br>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('register') }}">
+        <label for="fullname">Full Name</label><br>
+        <input type="text" id="fullname" name="fullname" placeholder="Full Name" required><br>
+
         <label for="email">Email</label><br>
-        <input type="text" name="Email" placeholder="Enter email" required><br>
-        <label for="phone">Phone Number</label>
-        <input type="phone" name="phone number" placeholder="Phone Numbeer" required><br>
-        <label for="password">Password</label>
-        <input type="password" name="password" placeholder="Enter password" required><br>
-        <label for="comfirm-password">Comfirt Password</label>
-        <input type="password" name="comfirm_password" placeholder="Comfirm your password"><br>
+        <input type="email" id="email" name="email" placeholder="Enter email" required><br>
 
-        <button id="submit">Register</button><br>
+        <label for="password">Password</label><br>
+        <input type="password" id="password" name="password" placeholder="Enter password" required><br>
 
-        Already have an account? <a href="login.html">Login</a><br>
+        <button id="submit" type="submit">Register</button><br>
+
+        Already have an account? <a href="{{ url_for('login') }}">Login</a><br>
         <br>
-        Continue with google? <a href="google.html">Google</a>
+        Continue with Google? <a href="#">Google</a>
     </form>
 
     <footer>
-        &copy Studenst Comfort - 2025 All Right  Researved.
+        &copy; Student Comfort - 2025 All Rights Reserved.
     </footer>
 </body>
 </html>
