@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Student Comfort</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <main>
+        <section class="empty-page">
+            <span class="eyebrow">404 · NOT FOUND</span>
+            <h1>Looks like this place isn't here.</h1>
+            <p>The house you requested does not exist or is no longer available.</p>
+            <a class="button button-primary" href="{{ url_for('houses') }}">Browse houses <span aria-hidden="true">→</span></a>
+        </section>
+    </main>
+</body>
+</html>

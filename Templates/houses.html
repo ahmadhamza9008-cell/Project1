@@ -4,32 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Comfort - Houses</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='houses.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
     <nav>
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <div class="nav-links">
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('about') }}">About</a>
         <a href="{{ url_for('contact') }}">Contact</a>
         <a href="{{ url_for('houses') }}">Houses</a>
+        {% if session.get('user_id') %}
+            <span>Hi, {{ session.get('username') }}</span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+        </div>
     </nav>
 
-    <h1>Explore houses in the location you want within Jos city</h1>
+    <main class="browse-page">
+    <header class="page-heading">
+        <span class="eyebrow">YOUR STUDENT HOME IS OUT THERE</span>
+        <h1>Find a place to <em>belong.</em></h1>
+        <p>Explore student-friendly spaces across Plateau State and find the one that feels right.</p>
+    </header>
 
+    <form class="search-form" method="get" action="{{ url_for('houses') }}">
+        <label><span>Search</span><input type="search" name="q" value="{{ query }}" placeholder="House name or keyword"></label>
+        <label><span>Location</span><input type="text" name="location" value="{{ location }}" placeholder="Jos, Pankshin..."></label>
+        <label><span>Min. budget</span><input type="number" name="min_price" value="{{ min_price if min_price is not none else '' }}" placeholder="Naira"></label>
+        <label><span>Max. budget</span><input type="number" name="max_price" value="{{ max_price if max_price is not none else '' }}" placeholder="Naira"></label>
+        <button type="submit" class="button button-primary">Find a home <span aria-hidden="true">→</span></button>
+        {% if query or location or min_price is not none or max_price is not none %}
+            <a class="clear-filters" href="{{ url_for('houses') }}">Clear filters</a>
+        {% endif %}
+    </form>
+
+    <div class="results-heading"><h2>Available student homes</h2><span>{{ houses|length }} shown</span></div>
     <div class="houses">
+        {% if not houses %}
+        <div class="empty-state"><span>⌂</span><h2>No homes found</h2><p>Try changing your search or clearing some filters.</p></div>
+        {% endif %}
         {% for house in houses %}
-        <div class="houses-card">
-            <img src="{{ url_for('static', filename=house['image_url']) }}" alt="{{ house['name'] }}">
-            <h4>{{ house['name'] }}</h4>
-            <p>Location: {{ house['address'] }}</p>
-            <p>Price: N{{ "{:,.0f}".format(house['price']) }} per year</p>
-            <p>{{ house['description'] }}</p>
-        </div>
+        <article class="houses-card">
+            <a class="card-image" href="{{ url_for('house_detail', house_id=house['id']) }}">
+                <img src="{{ url_for('static', filename=house['image_url']) }}" alt="{{ house['name'] }}">
+                <span class="image-tag">Student friendly</span>
+            </a>
+            <div class="card-content">
+                <p class="card-location"><span aria-hidden="true">⌖</span> {{ house['address'] }}</p>
+                <h3>{{ house['name'] }}</h3>
+                <p class="card-description">{{ house['description'] }}</p>
+                <div class="card-bottom">
+                    <p class="card-price">N{{ "{:,.0f}".format(house['price']) }} <span>/ year</span></p>
+                    <a class="round-link" href="{{ url_for('house_detail', house_id=house['id']) }}" aria-label="View {{ house['name'] }}">→</a>
+                </div>
+            </div>
+        </article>
         {% endfor %}
     </div>
 
+    {% if total_pages > 1 %}
+    <nav class="pagination" aria-label="House listing pages">
+        {% if page > 1 %}
+        <a href="{{ url_for('houses', q=query, location=location, min_price=min_price, max_price=max_price, page=page-1) }}">Previous</a>
+        {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="{{ url_for('houses', q=query, location=location, min_price=min_price, max_price=max_price, page=page+1) }}">Next</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+    </main>
+
     <footer>
-        &copy; Student Comfort - 2025 All Rights Reserved.
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <p>Helping students find a place to feel at home.</p>
+        <span>&copy; Student Comfort - 2026</span>
     </footer>
 </body>
 </html>

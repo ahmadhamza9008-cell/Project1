@@ -26,3 +26,74 @@ footer{
     height: 240px;
     object-fit: cover;
 }
+
+body{
+    font-family: Arial, sans-serif;
+    margin: 10px;
+}
+
+.search-form{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.search-form input,
+.search-form button{
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.houses{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.houses-card{
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.details-link{
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background: navy;
+    color: white;
+    text-decoration: none;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.pagination a{
+    color: navy;
+}
+
+.house-detail{
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(240px, 1fr);
+    gap: 30px;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.house-detail img{
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+@media (max-width: 700px){
+    .house-detail{
+        grid-template-columns: 1fr;
+    }
+}

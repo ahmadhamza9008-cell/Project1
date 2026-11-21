@@ -4,21 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Comfort - About</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='about.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
     <nav>
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <div class="nav-links">
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('about') }}">About</a>
         <a href="{{ url_for('contact') }}">Contact</a>
         <a href="{{ url_for('houses') }}">Houses</a>
+        {% if session.get('user_id') %}
+        <span>Hi, {{ session.get('username') }}</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+        </div>
     </nav>
 
-    <h1>About Student Comfort</h1>
-    <p>Student Comfort was founded in 2026 at Harvard Hub, Jos, by the Student Industrial Work Scheme (SIWES) from various universities and institutions across Nigeria.</p>
+    <main class="content-page">
+        <header class="page-heading">
+            <span class="eyebrow">A LITTLE ABOUT US</span>
+            <h1>Helping students feel <em>at home.</em></h1>
+            <p>Student Comfort was founded in Jos to make finding student accommodation simpler and more welcoming.</p>
+        </header>
+        <section class="story-card">
+            <div class="story-mark">SC</div>
+            <div><h2>A better start to student life</h2><p>We connect students with accommodation options across Plateau State. Whether you are moving to a new city or looking for a better place to stay, we want it to be easier to explore local homes and make an informed choice.</p></div>
+        </section>
+        <section class="values-grid">
+            <article><span>01</span><h3>Student first</h3><p>We keep student needs, comfort, and budgets at the heart of the experience.</p></article>
+            <article><span>02</span><h3>Rooted locally</h3><p>We focus on communities and housing options in Plateau State.</p></article>
+            <article><span>03</span><h3>Simple discovery</h3><p>We make it easier to browse, compare, and ask about available homes.</p></article>
+        </section>
+    </main>
 
     <footer>
-        &copy; Student Comfort - 2025 All Rights Reserved.
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <p>Helping students find a place to feel at home.</p>
+        <span>&copy; Student Comfort - 2026</span>
     </footer>
 </body>
 </html>

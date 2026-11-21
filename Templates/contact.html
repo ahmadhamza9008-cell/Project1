@@ -4,15 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Comfort - Contact</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <body>
     <nav>
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <div class="nav-links">
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('about') }}">About</a>
         <a href="{{ url_for('contact') }}">Contact</a>
         <a href="{{ url_for('houses') }}">Houses</a>
+        {% if session.get('user_id') %}
+        <span>Hi, {{ session.get('username') }}</span>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+        </div>
     </nav>
+
+    <main class="contact-page">
+    <header class="page-heading">
+        <span class="eyebrow">WE’RE HERE TO HELP</span>
+        <h1>Let's find your <em>next home.</em></h1>
+        <p>Have a question about a listing or need a hand? Send us a message and we’ll be glad to help.</p>
+    </header>
 
     {% if error %}
         <p class="error">{{ error }}</p>
@@ -21,27 +38,38 @@
         <p class="success">{{ success }}</p>
     {% endif %}
 
-    <h1>You can reach out to us through the following contact details.</h1>
-    <p>+2348037900817</p>
-    <p>ahmadhamza9008@gmail.com</p>
+    <div class="contact-layout">
+        <aside class="contact-info">
+            <span class="eyebrow">GET IN TOUCH</span>
+            <h2>A real person is ready to help.</h2>
+            <p>Reach out about a home, your search, or anything else we can help with.</p>
+            <a href="tel:+2348037900817"><span>PHONE</span>+234 803 790 0817</a>
+            <a href="mailto:ahmadhamza9008@gmail.com"><span>EMAIL</span>ahmadhamza9008@gmail.com</a>
+        </aside>
 
-    <form action="{{ url_for('contact') }}" method="post">
-        <h3>Submit a message or complaint to us</h3>
-        <label for="fullname">Full Name</label><br>
+    <form class="contact-form" action="{{ url_for('contact') }}" method="post">
+        <h2>Send us a message</h2>
+        <p>Fill in the form and tell us how we can help.</p>
+        <label for="fullname">Full Name</label>
         <input type="text" id="fullname" name="fullname" placeholder="Full Name" required><br>
 
-        <label for="email">Email</label><br>
+        <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="Enter your email" required><br>
 
-        <label for="phone">Phone Number</label><br>
+        <label for="phone">Phone Number</label>
         <input type="tel" id="phone" name="phone" placeholder="+234 000 000 0000" required><br>
 
-        <textarea name="description" id="description" rows="3" minlength="20" maxlength="500" placeholder="Description"></textarea><br>
-        <button type="submit">Submit</button>
+        <label for="description">Message</label>
+        <textarea name="description" id="description" rows="5" minlength="20" maxlength="500" placeholder="Tell us what you need help with..." required></textarea>
+        <button type="submit" class="button button-primary">Send message <span aria-hidden="true">→</span></button>
     </form>
+    </div>
+    </main>
 
     <footer>
-        &copy; Student Comfort - 2025 All Rights Reserved.
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <p>Helping students find a place to feel at home.</p>
+        <span>&copy; Student Comfort - 2026</span>
     </footer>
 </body>
 </html>

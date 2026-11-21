@@ -34,3 +34,24 @@ body{
     padding: 0;
 
 }
+
+.houses{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.houses-card{
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.details-link{
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background: navy;
+    color: white;
+    text-decoration: none;
+}

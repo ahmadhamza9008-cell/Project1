@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ house['name'] }} - Student Comfort</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <nav>
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <div class="nav-links">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('houses') }}">Houses</a>
+        {% if session.get('user_id') %}
+            <span>Hi, {{ session.get('username') }}</span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+        {% endif %}
+        </div>
+    </nav>
+
+    <main class="house-detail">
+        <a class="back-link" href="{{ url_for('houses') }}">← Back to houses</a>
+        <div class="detail-photo"><img src="{{ url_for('static', filename=house['image_url']) }}" alt="{{ house['name'] }}"></div>
+        <article class="detail-content">
+            <span class="eyebrow">A PLACE TO CALL YOUR OWN</span>
+            <h1>{{ house['name'] }}</h1>
+            <p class="card-location"><span aria-hidden="true">⌖</span> {{ house['address'] }}</p>
+            <p class="detail-price">N{{ "{:,.0f}".format(house['price']) }} <span>/ year</span></p>
+            <hr>
+            <h2>About this home</h2>
+            <p>{{ house['description'] }}</p>
+            <a class="button button-primary" href="{{ url_for('contact') }}">Ask us about this home <span aria-hidden="true">→</span></a>
+        </article>
+    </main>
+
+    {% if related %}
+    <section>
+        <h2>Similar houses</h2>
+        <div class="houses">
+            {% for item in related %}
+            <div class="houses-card">
+                <img src="{{ url_for('static', filename=item['image_url']) }}" alt="{{ item['name'] }}">
+                <h3>{{ item['name'] }}</h3>
+                <p>{{ item['address'] }}</p>
+                <a class="details-link" href="{{ url_for('house_detail', house_id=item['id']) }}">View details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <footer>
+        <a class="brand" href="{{ url_for('index') }}">Student<span>Comfort</span></a>
+        <p>Helping students find a place to feel at home.</p>
+        <span>&copy; Student Comfort - 2026</span>
+    </footer>
+</body>
+</html>
