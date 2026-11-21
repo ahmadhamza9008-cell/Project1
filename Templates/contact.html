@@ -14,11 +14,18 @@
         <a href="{{ url_for('houses') }}">Houses</a>
     </nav>
 
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    {% if success %}
+        <p class="success">{{ success }}</p>
+    {% endif %}
+
     <h1>You can reach out to us through the following contact details.</h1>
     <p>+2348037900817</p>
     <p>ahmadhamza9008@gmail.com</p>
 
-    <form action="#" method="post">
+    <form action="{{ url_for('contact') }}" method="post">
         <h3>Submit a message or complaint to us</h3>
         <label for="fullname">Full Name</label><br>
         <input type="text" id="fullname" name="fullname" placeholder="Full Name" required><br>

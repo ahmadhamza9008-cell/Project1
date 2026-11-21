@@ -20,14 +20,12 @@ footer{
     padding: 15px;
 }
 
-image{
-    display: flex;
+.houses-card img{
+    display: block;
     margin: 20px auto;
     max-width: 100%;
     height: auto;
-    size: cover;
     object-fit: cover;
-    
 }
 
 body{

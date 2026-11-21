@@ -1,7 +1,10 @@
 import sqlite3
 from pathlib import Path
+import os
+import secrets
 
 from flask import Flask, redirect, render_template, request, url_for
+from werkzeug.security import check_password_hash, generate_password_hash
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -11,7 +14,7 @@ app = Flask(
     static_folder=str(BASE_DIR.parent / "Templates" / "static"),
     static_url_path="/static",
 )
-app.secret_key = "student-comfort-secret-key"
+app.secret_key = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
 
 
 def get_db_connection():
@@ -46,13 +49,37 @@ def init_db():
         )
         conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS contact_messages(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fullname TEXT NOT NULL,
+                email TEXT NOT NULL,
+                phone TEXT NOT NULL,
+                description TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        conn.execute(
+            """
             INSERT OR IGNORE INTO houses (name, address, price, description, image_url)
             VALUES
-                ('Self Content', 'Pankshin, Plateau State', 100000, 'Comfortable student room with reliable security and electricity.', 'images/Image 1'),
-                ('Premier Lodge', 'Jos, Plateau State', 120000, 'Secure accommodation close to campus and transport routes.', 'images/IMage 2'),
-                ('Campus View', 'Pankshin, Plateau State', 95000, 'Affordable and well-kept rooms for students.', 'images/image 3'),
-                ('Green Valley', 'Jos, Plateau State', 110000, 'Spacious rooms with water supply and a peaceful environment.', 'images/image 4')
+                ('Self Content', 'Pankshin, Plateau State', 100000, 'Comfortable student room with reliable security and electricity.', 'images/Image 1.jpg'),
+                ('Premier Lodge', 'Jos, Plateau State', 120000, 'Secure accommodation close to campus and transport routes.', 'images/IMage 2.jpg'),
+                ('Campus View', 'Pankshin, Plateau State', 95000, 'Affordable and well-kept rooms for students.', 'images/image 3.jpg'),
+                ('Green Valley', 'Jos, Plateau State', 110000, 'Spacious rooms with water supply and a peaceful environment.', 'images/image 4.jpg')
             """
+        )
+        conn.execute(
+            "UPDATE houses SET image_url = 'images/Image 1.jpg' WHERE image_url = 'images/Image 1'"
+        )
+        conn.execute(
+            "UPDATE houses SET image_url = 'images/IMage 2.jpg' WHERE image_url = 'images/IMage 2'"
+        )
+        conn.execute(
+            "UPDATE houses SET image_url = 'images/image 3.jpg' WHERE image_url = 'images/image 3'"
+        )
+        conn.execute(
+            "UPDATE houses SET image_url = 'images/image 4.jpg' WHERE image_url = 'images/image 4'"
         )
 
 
@@ -74,9 +101,31 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
-@app.route("/contact.html")
+@app.route("/contact", methods=["GET", "POST"])
+@app.route("/contact.html", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
+        fullname = request.form.get("fullname", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip()
+        description = request.form.get("description", "").strip()
+
+        if not fullname or not email or not phone or len(description) < 20:
+            return render_template(
+                "contact.html",
+                error="Please complete all fields. Your description must be at least 20 characters.",
+            )
+
+        with get_db_connection() as conn:
+            conn.execute(
+                """
+                INSERT INTO contact_messages (fullname, email, phone, description)
+                VALUES (?, ?, ?, ?)
+                """,
+                (fullname, email, phone, description),
+            )
+        return render_template("contact.html", success="Your message has been sent.")
+
     return render_template("contact.html")
 
 
@@ -93,17 +142,22 @@ def houses():
 def register():
     if request.method == "POST":
         username = request.form.get("fullname", "").strip()
-        email = request.form.get("email", "").strip()
+        email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
 
         if not username or not email or not password:
             return render_template("register.html", error="Please complete all fields.")
+        if len(password) < 8:
+            return render_template(
+                "register.html",
+                error="Password must be at least 8 characters.",
+            )
 
         try:
             with get_db_connection() as conn:
                 conn.execute(
                     "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-                    (username, email, password),
+                    (username, email, generate_password_hash(password)),
                 )
         except sqlite3.IntegrityError:
             return render_template("register.html", error="That email is already registered.")
@@ -117,16 +171,16 @@ def register():
 @app.route("/login.html", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip()
+        email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
 
         with get_db_connection() as conn:
             user = conn.execute(
-                "SELECT * FROM users WHERE email = ? AND password = ?",
-                (email, password),
+                "SELECT * FROM users WHERE email = ?",
+                (email,),
             ).fetchone()
 
-        if user is None:
+        if user is None or not check_password_hash(user["password"], password):
             return render_template("login.html", error="Invalid email or password.")
 
         return redirect(url_for("index"))
@@ -135,4 +189,4 @@ def login():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.environ.get("FLASK_DEBUG") == "1")
