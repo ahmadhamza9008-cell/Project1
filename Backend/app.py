@@ -36,10 +36,16 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
-                password TEXT NOT NULL
+                password TEXT NOT NULL,
+                phone TEXT NOT NULL DEFAULT ''
             )
             """
         )
+        user_columns = {
+            column["name"] for column in conn.execute("PRAGMA table_info(users)")
+        }
+        if "phone" not in user_columns:
+            conn.execute("ALTER TABLE users ADD COLUMN phone TEXT NOT NULL DEFAULT ''")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS houses(
@@ -220,24 +226,49 @@ def register():
     if request.method == "POST":
         username = request.form.get("fullname", "").strip()
         email = request.form.get("email", "").strip().lower()
+        phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        form_data = {"fullname": username, "email": email, "phone": phone}
 
-        if not username or not email or not password:
-            return render_template("register.html", error="Please complete all fields.")
+        if not username or not email or not phone or not password or not confirm_password:
+            return render_template(
+                "register.html",
+                error="Please complete all fields.",
+                form_data=form_data,
+            )
+        phone_digits = "".join(character for character in phone if character.isdigit())
+        if not 7 <= len(phone_digits) <= 15:
+            return render_template(
+                "register.html",
+                error="Enter a valid phone number.",
+                form_data=form_data,
+            )
         if len(password) < 8:
             return render_template(
                 "register.html",
                 error="Password must be at least 8 characters.",
+                form_data=form_data,
+            )
+        if password != confirm_password:
+            return render_template(
+                "register.html",
+                error="Passwords do not match.",
+                form_data=form_data,
             )
 
         try:
             with get_db_connection() as conn:
                 conn.execute(
-                    "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-                    (username, email, generate_password_hash(password)),
+                    "INSERT INTO users (username, email, password, phone) VALUES (?, ?, ?, ?)",
+                    (username, email, generate_password_hash(password), phone),
                 )
         except sqlite3.IntegrityError:
-            return render_template("register.html", error="That email is already registered.")
+            return render_template(
+                "register.html",
+                error="That email is already registered.",
+                form_data=form_data,
+            )
 
         with get_db_connection() as conn:
             user = conn.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
